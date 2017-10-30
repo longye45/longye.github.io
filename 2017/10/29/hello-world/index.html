@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="ly随笔">
 <meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-30T08:25:19.044Z">
+<meta property="og:updated_time" content="2017-10-30T12:11:37.232Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hello World">
 <meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
@@ -142,6 +142,8 @@
 </time>
 
 
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/hello/">hello</a></li></ul>
+
             
         </h5>
     </div>
@@ -170,6 +172,8 @@
             <time class="post-time" title="2017-10-29 19:48:48" datetime="2017-10-29T11:48:48.211Z"  itemprop="datePublished">2017-10-29</time>
 
             
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/hello/">hello</a></li></ul>
+
 
 
             
@@ -196,7 +200,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2017-10-30T08:25:19.044Z" itemprop="dateUpdated">2017-10-30 16:25:19</time>
+    最后更新时间：<time datetime="2017-10-30T12:11:37.232Z" itemprop="dateUpdated">2017-10-30 20:11:37</time>
 </span><br>
 
 
@@ -295,15 +299,25 @@
 
 
 
+
+
+
 <section class="comments" id="comments">
-    <!-- UY BEGIN -->
-    <div id="uyan_frame"></div>
-    <script src="http://v2.uyan.cc/code/uyan.js?uid=2147708"></script>
-    <!-- UY END -->
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'longye45',
+            repo: 'longye45.github.io',
+            oauth: {
+                client_id: 'b30bf4b4c6c506f6e1b0',
+                client_secret: '0a778cde5ada17ff4431f28456ed65865d11be0d',
+            },
+        })
+        gitment.render('comments')
+    </script>
 </section>
-
-
-
 
 
 

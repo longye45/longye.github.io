@@ -285,15 +285,25 @@
 
 
 
+
+
+
 <section class="comments" id="comments">
-    <!-- UY BEGIN -->
-    <div id="uyan_frame"></div>
-    <script src="http://v2.uyan.cc/code/uyan.js?uid=2147708"></script>
-    <!-- UY END -->
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'longye45',
+            repo: 'longye45.github.io',
+            oauth: {
+                client_id: 'b30bf4b4c6c506f6e1b0',
+                client_secret: '0a778cde5ada17ff4431f28456ed65865d11be0d',
+            },
+        })
+        gitment.render('comments')
+    </script>
 </section>
-
-
-
 
 
 

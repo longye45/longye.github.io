@@ -46,27 +46,6 @@
   </entry>
   
   <entry>
-    <title>test</title>
-    <link href="https://longye45.github.io/2017/10/29/test/"/>
-    <id>https://longye45.github.io/2017/10/29/test/</id>
-    <published>2017-10-29T15:25:41.000Z</published>
-    <updated>2017-10-30T03:07:59.209Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="测试以下"><a href="#测试以下" class="headerlink" title="测试以下"></a>测试以下</h1><p>这是一篇测试文档<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;测试以下&quot;&gt;&lt;a href=&quot;#测试以下&quot; class=&quot;headerlink&quot; title=&quot;测试以下&quot;&gt;&lt;/a&gt;测试以下&lt;/h1&gt;&lt;p&gt;这是一篇测试文档&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td clas
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>Hello World</title>
     <link href="https://longye45.github.io/2017/10/29/hello-world/"/>
     <id>https://longye45.github.io/2017/10/29/hello-world/</id>

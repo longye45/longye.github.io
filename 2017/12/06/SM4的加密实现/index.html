@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>国密算法SM4的Java与JavaScript实现 | ly随笔</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="加密,Java,JavaScript">
+    <meta name="description" content="SM4加密的实现前言最近项目中需要对数据进行加密处理，由于项目的特殊性要求，加密统一采用国密算法进行加密。网上对国密算法的资料有限，且没有找到对应的JavaScript加密代码，无奈之下只得自己实现。加密的算法文档在国家密码管理局官网上可以查找到，此次的算法实现仅限于SM3与SM4的代码实现，SM2由于项目未做特殊要求因此还未来得及实现。 SM4密码杂凑算法简介 SM4算法是一种对称分组加密算法。">
+<meta name="keywords" content="加密,Java,JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="国密算法SM4的Java与JavaScript实现">
+<meta property="og:url" content="https://longye45.github.io/2017/12/06/SM4的加密实现/index.html">
+<meta property="og:site_name" content="ly随笔">
+<meta property="og:description" content="SM4加密的实现前言最近项目中需要对数据进行加密处理，由于项目的特殊性要求，加密统一采用国密算法进行加密。网上对国密算法的资料有限，且没有找到对应的JavaScript加密代码，无奈之下只得自己实现。加密的算法文档在国家密码管理局官网上可以查找到，此次的算法实现仅限于SM3与SM4的代码实现，SM2由于项目未做特殊要求因此还未来得及实现。 SM4密码杂凑算法简介 SM4算法是一种对称分组加密算法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-22T03:23:15.153Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="国密算法SM4的Java与JavaScript实现">
+<meta name="twitter:description" content="SM4加密的实现前言最近项目中需要对数据进行加密处理，由于项目的特殊性要求，加密统一采用国密算法进行加密。网上对国密算法的资料有限，且没有找到对应的JavaScript加密代码，无奈之下只得自己实现。加密的算法文档在国家密码管理局官网上可以查找到，此次的算法实现仅限于SM3与SM4的代码实现，SM2由于项目未做特殊要求因此还未来得及实现。 SM4密码杂凑算法简介 SM4算法是一种对称分组加密算法。">
+    
+        <link rel="alternate" type="application/atom+xml" title="ly随笔" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/longye.png">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/longye.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">longye45</h5>
+          <a href="mailto:1210395146@qq.com" title="1210395146@qq.com" class="mail">1210395146@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/longye45" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">国密算法SM4的Java与JavaScript实现</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">国密算法SM4的Java与JavaScript实现</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-12-06T08:01:05.016Z" itemprop="datePublished" class="page-time">
+  2017-12-06
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法编程/">算法编程</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#SM4加密的实现"><span class="post-toc-number">1.</span> <span class="post-toc-text">SM4加密的实现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#SM4密码杂凑算法简介"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">SM4密码杂凑算法简介</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SM4算法加密过程"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">SM4算法加密过程</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SM4算法的解密过程"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">SM4算法的解密过程</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#SM4代码实现过程"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">SM4代码实现过程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#java中的SM4实现"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">java中的SM4实现</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#JavaScript中的SM4实现"><span class="post-toc-number">1.3.2.</span> <span class="post-toc-text">JavaScript中的SM4实现</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#SM3加密的使用方法"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">SM3加密的使用方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SM4加密的Java使用"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">SM4加密的Java使用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SM4加密的JavaScript使用"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">SM4加密的JavaScript使用</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">小结</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-SM4的加密实现"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">国密算法SM4的Java与JavaScript实现</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-12-06 16:01:05" datetime="2017-12-06T08:01:05.016Z"  itemprop="datePublished">2017-12-06</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法编程/">算法编程</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="SM4加密的实现"><a href="#SM4加密的实现" class="headerlink" title="SM4加密的实现"></a><a href="https://github.com/longye45/encrpt" target="_blank" rel="external">SM4加密的实现</a></h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><em>最近项目中需要对数据进行加密处理，由于项目的特殊性要求，加密统一采用国密算法进行加密。网上对国密算法的资料有限，且没有找到对应的JavaScript加密代码，无奈之下只得自己实现。加密的算法文档在<a href="http://www.oscca.gov.cn/sca/index.shtml" target="_blank" rel="external">国家密码管理局</a>官网上可以查找到，此次的算法实现仅限于SM3与SM4的代码实现，SM2由于项目未做特殊要求因此还未来得及实现。</em></p>
+<h2 id="SM4密码杂凑算法简介"><a href="#SM4密码杂凑算法简介" class="headerlink" title="SM4密码杂凑算法简介"></a>SM4密码杂凑算法简介</h2><blockquote>
+<p>SM4算法是一种对称分组加密算法。该算法的分组长度为 128 比特，密钥长度为 128 比特。加密算法与密钥扩展算法都采用 32 轮非线性迭代结构。解密算法与加密算法的结构相同，只是轮询密钥的使用顺序相反，解密轮密钥是加密轮密钥的逆序。</p>
+</blockquote>
+<h3 id="SM4算法加密过程"><a href="#SM4算法加密过程" class="headerlink" title="SM4算法加密过程"></a>SM4算法加密过程</h3><ol>
+<li><p>根据加密密钥生成轮询密钥<br>根据密钥的不同，按照一定规律生成32个字（每个字四个字节）的轮询密钥，用于之后数据的加密；</p>
+</li>
+<li><p>将分组后的数据用轮询秘钥进行加密</p>
+<p>加密的过程主要是用T方法和L方法，T方法转换过程中会用SBOX做一次非线性置换，经过这两个方法进行加密。</p>
+</li>
+</ol>
+<h3 id="SM4算法的解密过程"><a href="#SM4算法的解密过程" class="headerlink" title="SM4算法的解密过程"></a>SM4算法的解密过程</h3><ol>
+<li><p>根据加密密钥生成轮询密钥<br>根据密钥的不同，按照一定规律生成32个字（每个字四个字节）的轮询密钥，用于之后数据的加密；</p>
+</li>
+<li><p>将分组后的数据逆向用轮询秘钥进行加密<br>解密的过程主要是用T方法和L方法，T方法转换过程中会用SBOX做一次非线性置换，经过这两个方法进行加密。</p>
+</li>
+</ol>
+<h2 id="SM4代码实现过程"><a href="#SM4代码实现过程" class="headerlink" title="SM4代码实现过程"></a>SM4代码实现过程</h2><h3 id="java中的SM4实现"><a href="#java中的SM4实现" class="headerlink" title="java中的SM4实现"></a>java中的SM4实现</h3><ul>
+<li>代码中<strong>encrpt（）</strong> 方法是供调用的Java的方法，方法的返回值是加密完成的数组，本方法有一个传入整型数据的重载方法，表示SM4加密次数；</li>
+</ul>
+<ul>
+<li><strong>keyExtend()</strong>方法为扩展秘钥的方法；</li>
+</ul>
+<ul>
+<li><strong>generateKey（）</strong>方法为未指定密钥时自动生成随机密钥的方法，不需要再使用时调用，程序会在初始化时查找密钥，若未指定自动生成密钥；</li>
+</ul>
+<ul>
+<li><strong>decrpt（）</strong>方法为解密方法，同样提供传入整型的重写方法，用来解密经SM4加密多次后的数据，注意使用本方法时必须指定密钥（新建SM4对象时），或者直接在加密的对象中使用。</li>
+<li><strong>getKeyStr()</strong>方法用来获取加解密的密钥十六进制字符串格式</li>
+</ul>
+<p>其他方法均为以上方法的子方法，由于设计较为底层的算法故不加赘述，具体请参照官方算法说明文档。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">     * 加密</span></div><div class="line"><span class="comment">     * </span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span></span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] encrpt() &#123;</div><div class="line">        <span class="keyword">this</span>.bytes = addBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">16</span> - (<span class="keyword">this</span>.bytes.length % <span class="number">16</span> == <span class="number">0</span> ? <span class="number">16</span> : <span class="keyword">this</span>.bytes.length % <span class="number">16</span>)]);</div><div class="line">        keyExtend();<span class="comment">// 生成轮询密钥</span></div><div class="line">        <span class="keyword">int</span> nowPo = <span class="number">0</span>;<span class="comment">// 当前字开始位置</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.bytes.length / BLOCK; i++, nowPo += BLOCK) &#123;<span class="comment">// 分组</span></div><div class="line">            <span class="keyword">int</span>[] rows = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">4</span> + <span class="number">32</span>];</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">4</span>; j++) &#123;</div><div class="line">                rows[j] = byteArrayToInt(<span class="keyword">this</span>.bytes, nowPo + j * <span class="number">4</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">32</span>; k++) &#123;</div><div class="line">                rows[k + <span class="number">4</span>] = rows[k] ^ TMethod(rows[k + <span class="number">1</span>] ^ rows[k + <span class="number">2</span>] ^ rows[k + <span class="number">3</span>] ^ <span class="keyword">this</span>.rks[k]);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; k++) &#123;</div><div class="line">                System.arraycopy(intToByteArray(rows[<span class="number">35</span> - k]), <span class="number">0</span>, <span class="keyword">this</span>.bytes, nowPo + <span class="number">4</span> * k, <span class="number">4</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">/*</span></div><div class="line"><span class="comment">         * 将未分组byte移到结果</span></div><div class="line"><span class="comment">         */</span></div><div class="line">        System.arraycopy(<span class="keyword">this</span>.bytes, <span class="keyword">this</span>.bytes.length / BLOCK * BLOCK, <span class="keyword">this</span>.bytes, <span class="keyword">this</span>.bytes.length / BLOCK * BLOCK, <span class="keyword">this</span>.bytes.length % BLOCK);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.bytes;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">    * 密钥扩展算法</span></div><div class="line"><span class="comment">    */</span></div><div class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">keyExtend</span><span class="params">()</span> </span>&#123;</div><div class="line">       <span class="keyword">int</span>[] K = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">36</span>];</div><div class="line">       <span class="keyword">int</span>[] keys = &#123; <span class="keyword">this</span>.key[<span class="number">0</span>] ^ <span class="keyword">this</span>.FKS[<span class="number">0</span>], <span class="keyword">this</span>.key[<span class="number">1</span>] ^ <span class="keyword">this</span>.FKS[<span class="number">1</span>], <span class="keyword">this</span>.key[<span class="number">2</span>] ^ <span class="keyword">this</span>.FKS[<span class="number">2</span>], <span class="keyword">this</span>.key[<span class="number">3</span>] ^ <span class="keyword">this</span>.FKS[<span class="number">3</span>] &#125;;</div><div class="line">       System.arraycopy(keys, <span class="number">0</span>, K, <span class="number">0</span>, keys.length);</div><div class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++) &#123;</div><div class="line">           <span class="keyword">this</span>.rks[i] = K[i] ^ TPMethod(K[i + <span class="number">1</span>] ^ K[i + <span class="number">2</span>] ^ K[i + <span class="number">3</span>] ^ CK[i]);</div><div class="line">           K[i + <span class="number">4</span>] = <span class="keyword">this</span>.rks[i];</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">    * 随机生成密钥</span></div><div class="line"><span class="comment">    */</span></div><div class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">generateKey</span><span class="params">()</span> </span>&#123;</div><div class="line">       <span class="keyword">byte</span>[] var2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">32</span>];</div><div class="line">       <span class="keyword">this</span>.random.nextBytes(var2);</div><div class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; KEYLENGTH; i++) &#123;</div><div class="line">           <span class="keyword">this</span>.key[i] = byteArrayToInt(var2, <span class="number">4</span> * i);</div><div class="line">       &#125;</div><div class="line">       isKeyInit = <span class="keyword">true</span>;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">     * 加密</span></div><div class="line"><span class="comment">     * </span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span></span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">byte</span>[] encrpt() &#123;</div><div class="line">        <span class="keyword">this</span>.bytes = addBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">16</span> - (<span class="keyword">this</span>.bytes.length % <span class="number">16</span> == <span class="number">0</span> ? <span class="number">16</span> : <span class="keyword">this</span>.bytes.length % <span class="number">16</span>)]);</div><div class="line">        keyExtend();<span class="comment">// 生成轮询密钥</span></div><div class="line">        <span class="keyword">int</span> nowPo = <span class="number">0</span>;<span class="comment">// 当前字开始位置</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.bytes.length / BLOCK; i++, nowPo += BLOCK) &#123;<span class="comment">// 分组</span></div><div class="line">            <span class="keyword">int</span>[] rows = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">4</span> + <span class="number">32</span>];</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">4</span>; j++) &#123;</div><div class="line">                rows[j] = byteArrayToInt(<span class="keyword">this</span>.bytes, nowPo + j * <span class="number">4</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">32</span>; k++) &#123;</div><div class="line">                rows[k + <span class="number">4</span>] = rows[k] ^ TMethod(rows[k + <span class="number">1</span>] ^ rows[k + <span class="number">2</span>] ^ rows[k + <span class="number">3</span>] ^ <span class="keyword">this</span>.rks[k]);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">4</span>; k++) &#123;</div><div class="line">                System.arraycopy(intToByteArray(rows[<span class="number">35</span> - k]), <span class="number">0</span>, <span class="keyword">this</span>.bytes, nowPo + <span class="number">4</span> * k, <span class="number">4</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">/*</span></div><div class="line"><span class="comment">         * 将未分组byte移到结果</span></div><div class="line"><span class="comment">         */</span></div><div class="line">        System.arraycopy(<span class="keyword">this</span>.bytes, <span class="keyword">this</span>.bytes.length / BLOCK * BLOCK, <span class="keyword">this</span>.bytes, <span class="keyword">this</span>.bytes.length / BLOCK * BLOCK, <span class="keyword">this</span>.bytes.length % BLOCK);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.bytes;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">     * 随机生成密钥</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">generateKey</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">byte</span>[] var2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">32</span>];</div><div class="line">        <span class="keyword">this</span>.random.nextBytes(var2);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; KEYLENGTH; i++) &#123;</div><div class="line">            <span class="keyword">this</span>.key[i] = byteArrayToInt(var2, <span class="number">4</span> * i);</div><div class="line">        &#125;</div><div class="line">        isKeyInit = <span class="keyword">true</span>;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h3 id="JavaScript中的SM4实现"><a href="#JavaScript中的SM4实现" class="headerlink" title="JavaScript中的SM4实现"></a>JavaScript中的SM4实现</h3><p>由于Java代码的完成时间较早，JavaScript的实现代码是从Java代码移植过来的，方法命名大同小异，因此不加赘述。代码版面较长，本文就不贴了，请移步github查看。</p>
+<h2 id="SM3加密的使用方法"><a href="#SM3加密的使用方法" class="headerlink" title="SM3加密的使用方法"></a>SM3加密的使用方法</h2><h3 id="SM4加密的Java使用"><a href="#SM4加密的Java使用" class="headerlink" title="SM4加密的Java使用"></a>SM4加密的Java使用</h3><p>最近事务繁多无法抽身用设计模式对本算法进行优化，为了稳定运行只能牺牲性能采用实例化后调用的方式进行。由于底层计算都是位运算实际使用情况尚可，以下是在Java中的使用方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</div><div class="line">        SM4Encrp sm4 = <span class="keyword">new</span> SM4Encrp(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">0x43</span>,<span class="number">0x35</span>&#125;);<span class="comment">//传入要加密的数据，使用内部生成随机密钥的方式进行，也可使用提供的其他构造方法</span></div><div class="line">        <span class="keyword">byte</span> bt = sm4.encrpt();<span class="comment">//加密</span></div><div class="line">        SM4Encrp sm4de = <span class="keyword">new</span> SM4Encrp(bt,sm4.getKeyStr);<span class="comment">//传入需要解密的数据和加密用的密钥</span></div><div class="line">        <span class="keyword">byte</span> btSource = sm4de.decrpt();<span class="comment">//解密获取原数据</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h3 id="SM4加密的JavaScript使用"><a href="#SM4加密的JavaScript使用" class="headerlink" title="SM4加密的JavaScript使用"></a>SM4加密的JavaScript使用</h3><p>由于前台多是处理字符串和二进制数据，故统一采用传递二进制的方式进行杂凑计算。如果有求字符串杂凑值的必要可以调用以下方法转换为二进制byte数组进行使用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 字符串转byte数组</span></div><div class="line"><span class="comment"> * </span></div><div class="line"><span class="comment"> * @param &#123;*字符串&#125;</span></div><div class="line"><span class="comment"> *            str</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">stringToByte</span>(<span class="params">str</span>)</span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">var</span> bytes = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">    <span class="keyword">var</span> len, c;</div><div class="line">    len = str.length;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; len; i++)</div><div class="line">    &#123;</div><div class="line">        c = str.charCodeAt(i);</div><div class="line">        <span class="keyword">if</span> (c &gt;= <span class="number">0x010000</span> &amp;&amp; c &lt;= <span class="number">0x10FFFF</span>)</div><div class="line">        &#123;</div><div class="line">            bytes.push(((c &gt;&gt; <span class="number">18</span>) &amp; <span class="number">0x07</span>) | <span class="number">0xF0</span>);</div><div class="line">            bytes.push(((c &gt;&gt; <span class="number">12</span>) &amp; <span class="number">0x3F</span>) | <span class="number">0x80</span>);</div><div class="line">            bytes.push(((c &gt;&gt; <span class="number">6</span>) &amp; <span class="number">0x3F</span>) | <span class="number">0x80</span>);</div><div class="line">            bytes.push((c &amp; <span class="number">0x3F</span>) | <span class="number">0x80</span>);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c &gt;= <span class="number">0x000800</span> &amp;&amp; c &lt;= <span class="number">0x00FFFF</span>)</div><div class="line">        &#123;</div><div class="line">            bytes.push(((c &gt;&gt; <span class="number">12</span>) &amp; <span class="number">0x0F</span>) | <span class="number">0xE0</span>);</div><div class="line">            bytes.push(((c &gt;&gt; <span class="number">6</span>) &amp; <span class="number">0x3F</span>) | <span class="number">0x80</span>);</div><div class="line">            bytes.push((c &amp; <span class="number">0x3F</span>) | <span class="number">0x80</span>);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c &gt;= <span class="number">0x000080</span> &amp;&amp; c &lt;= <span class="number">0x0007FF</span>)</div><div class="line">        &#123;</div><div class="line">            bytes.push(((c &gt;&gt; <span class="number">6</span>) &amp; <span class="number">0x1F</span>) | <span class="number">0xC0</span>);</div><div class="line">            bytes.push((c &amp; <span class="number">0x3F</span>) | <span class="number">0x80</span>);</div><div class="line">        &#125; <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            bytes.push(c &amp; <span class="number">0xFF</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> bytes;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用方式如下所示：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> test = <span class="keyword">new</span> SM4Encrpt(&#123;   <span class="comment">//实例化解密类</span></div><div class="line">       （key/keyStr）:***,<span class="comment">//指定的数组加密/解密密钥数组/密钥字符串，此参数若是加密可以省略，加密密钥由本类自动生成；若是解密必须指定该密钥</span></div><div class="line">       bytes/enStr:*** <span class="comment">//需要加密/解密的二进制/字符串</span></div><div class="line">  &#125;);</div><div class="line">  test.encrpt();<span class="comment">//此为加密方法</span></div><div class="line">  test.encrpt(<span class="number">100</span>);<span class="comment">//此为加密100次</span></div><div class="line">  test.decrpt();<span class="comment">//此为解密方法</span></div><div class="line">  test.decrpt(<span class="number">100</span>);<span class="comment">//此为解密100次</span></div></pre></td></tr></table></figure>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><blockquote>
+<p>热衷造轮子，</p>
+<p>方便造车人。</p>
+</blockquote>
+<p>愿别人的收获中也有属于自己的耕耘。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-03-22T03:23:15.153Z" itemprop="dateUpdated">2018-03-22 11:23:15</time>
+</span><br>
+
+
+        
+    </div>
+    <footer>
+        <a href="https://longye45.github.io">
+            <img src="/img/longye.png" alt="longye45">
+            longye45
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/加密/">加密</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://longye45.github.io/2017/12/06/SM4的加密实现/&title=《国密算法SM4的Java与JavaScript实现》 — ly随笔&pic=https://longye45.github.io/img/longye.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://longye45.github.io/2017/12/06/SM4的加密实现/&title=《国密算法SM4的Java与JavaScript实现》 — ly随笔&source=寻光者" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://longye45.github.io/2017/12/06/SM4的加密实现/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《国密算法SM4的Java与JavaScript实现》 — ly随笔&url=https://longye45.github.io/2017/12/06/SM4的加密实现/&via=https://longye45.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://longye45.github.io/2017/12/06/SM4的加密实现/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/12/04/国密加密算法的Java与JavaScript实现/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">国密算法SM3的Java与JavaScript实现</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'longye45',
+            repo: 'longye45.github.io',
+            oauth: {
+                client_id: 'b30bf4b4c6c506f6e1b0',
+                client_secret: '0a778cde5ada17ff4431f28456ed65865d11be0d',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>longye45 &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://longye45.github.io/2017/12/06/SM4的加密实现/&title=《国密算法SM4的Java与JavaScript实现》 — ly随笔&pic=https://longye45.github.io/img/longye.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://longye45.github.io/2017/12/06/SM4的加密实现/&title=《国密算法SM4的Java与JavaScript实现》 — ly随笔&source=寻光者" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://longye45.github.io/2017/12/06/SM4的加密实现/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《国密算法SM4的Java与JavaScript实现》 — ly随笔&url=https://longye45.github.io/2017/12/06/SM4的加密实现/&via=https://longye45.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://longye45.github.io/2017/12/06/SM4的加密实现/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://longye45.github.io/2017/12/06/SM4的加密实现/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
